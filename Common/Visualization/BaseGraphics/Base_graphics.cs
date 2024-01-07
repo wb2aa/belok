@@ -1,4 +1,5 @@
-﻿using System.IO.Compression;
+﻿using System.Drawing;
+using System.IO.Compression;
 using Belok.Common.Geometry;
 
 namespace Belok.Common.Visualization.BaseGraphics

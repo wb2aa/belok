@@ -7,22 +7,22 @@
         public double angle;			//angle of second rotation around direction rotate_to
         public double[] translate_to;	//after rotation (+) (or translate fixed object (-))
         public double[] angles;			//right rotates around X, Y, Z
-        public double[] shifts;	
-        public double[,] matrix;		//matrix of all transformations
+        public double[] shifts;
+        public double[,] matrix;        //matrix of all transformations
 
-	    public Transform4x4()
+        public Transform4x4()
         {
             translate_from = new double[3];
             rotate_to = new double[3];
             translate_to = new double[3];
             angles = new double[3];
             shifts = new double[3];
-            matrix = new double[4,4];
+            matrix = new double[4, 4];
         }
-	    //Transform4x4 operator = (Transform4x4 trn); //{angle = trn.angle; return *this;}
+        //Transform4x4 operator = (Transform4x4 trn); //{angle = trn.angle; return *this;}
     };
 
-    class Rotate
+    internal class Rotate
     {
         float FLT_EPSILON = 1.192092896e-07F;
         //void RotateMatrix(double fi_x, double fi_y, double fi_z, double rotate[3][3]);
@@ -33,33 +33,33 @@
         //void Rotate_axis(Point_3 *p, Point_3 tna, double angle);
         public void WobbleMatrix(Point_3 tna, double angle, double[,] rotate)
         {
-	        double c1,c2,c3,c,s,cc;
-	        c1 = tna.x; c2 = tna.y; c3 = tna.z;
-	        c = Math.Cos(angle); s = Math.Sin(angle); cc = (1.0 - c);
+            double c1, c2, c3, c, s, cc;
+            c1 = tna.x; c2 = tna.y; c3 = tna.z;
+            c = Math.Cos(angle); s = Math.Sin(angle); cc = (1.0 - c);
             //G.KORN T.KORN p.393 Russian edition Moscow 1970
-	        rotate[0,0] = c + cc*c1*c1;
-	        rotate[0,1] =     cc*c1*c2 - s*c3;
-	        rotate[0,2] =     cc*c1*c3 + s*c2;
-	        rotate[1,0] =     cc*c2*c1 + s*c3;
-	        rotate[1,1] = c + cc*c2*c2;
-	        rotate[1,2] =     cc*c2*c3 - s*c1;
-	        rotate[2,0] =     cc*c3*c1 - s*c2;
-	        rotate[2,1] =     cc*c3*c2 + s*c1;
-	        rotate[2,2] = c + cc*c3*c3;
+            rotate[0, 0] = c + cc * c1 * c1;
+            rotate[0, 1] = cc * c1 * c2 - s * c3;
+            rotate[0, 2] = cc * c1 * c3 + s * c2;
+            rotate[1, 0] = cc * c2 * c1 + s * c3;
+            rotate[1, 1] = c + cc * c2 * c2;
+            rotate[1, 2] = cc * c2 * c3 - s * c1;
+            rotate[2, 0] = cc * c3 * c1 - s * c2;
+            rotate[2, 1] = cc * c3 * c2 + s * c1;
+            rotate[2, 2] = c + cc * c3 * c3;
         }
         public void TransformPoint(Point_3 p, double[,] rotate)
         {
-	        int i, j;
+            int i, j;
             double[] tmp = new double[3];
-            double[]x = new double[3];
-	        tmp[0] = tmp[1] = tmp[2] = 0.0;
-	        x[0] = p.x; x[1] = p.y; x[2] = p.z;
-	        for(i = 0; i < 3; i++) for(j = 0; j < 3; j++) tmp[i] += x[j] * rotate[i,j];
-	        p.x = tmp[0]; p.y = tmp[1]; p.z = tmp[2];
+            double[] x = new double[3];
+            tmp[0] = tmp[1] = tmp[2] = 0.0;
+            x[0] = p.x; x[1] = p.y; x[2] = p.z;
+            for (i = 0; i < 3; i++) for (j = 0; j < 3; j++) tmp[i] += x[j] * rotate[i, j];
+            p.x = tmp[0]; p.y = tmp[1]; p.z = tmp[2];
         }
-        private void Translate4x4 (Point_3 p, Transform4x4 res)
+        private void Translate4x4(Point_3 p, Transform4x4 res)
         {
-	        int i,j;
+            int i, j;
             for (i = 0; i < 4; i++)
             {
                 for (j = 0; j < 3; j++)
@@ -70,59 +70,59 @@
                         res.matrix[i, j] = 0;
                 }
             }
-	        res.matrix[0,3] = p.x;
-	        res.matrix[1,3] = p.y;
-	        res.matrix[2,3] = p.z;
-	        res.matrix[3,3] = 1;
+            res.matrix[0, 3] = p.x;
+            res.matrix[1, 3] = p.y;
+            res.matrix[2, 3] = p.z;
+            res.matrix[3, 3] = 1;
         }
-        private void Rotate4x4 (double[,] rotate, Transform4x4 res)
+        private void Rotate4x4(double[,] rotate, Transform4x4 res)
         {
-	        int i,j;
-	        for (i = 0; i < 3; i++) for (j = 0; j < 3; j++) res.matrix[i,j] = rotate[i,j];
-	        for (i = 0; i < 3; i++) res.matrix[i,3] = 0;
-	        for (j = 0; j < 3; j++) res.matrix[3,j] = 0;
-	        res.matrix[3,3] = 1;
+            int i, j;
+            for (i = 0; i < 3; i++) for (j = 0; j < 3; j++) res.matrix[i, j] = rotate[i, j];
+            for (i = 0; i < 3; i++) res.matrix[i, 3] = 0;
+            for (j = 0; j < 3; j++) res.matrix[3, j] = 0;
+            res.matrix[3, 3] = 1;
         }
-        private void Multiply4x4 (Transform4x4 a, Transform4x4 b, Transform4x4 res)
+        private void Multiply4x4(Transform4x4 a, Transform4x4 b, Transform4x4 res)
         {
-	        int i, j, k;
-	        for (i = 0; i < 4; i++)
+            int i, j, k;
+            for (i = 0; i < 4; i++)
                 for (j = 0; j < 4; j++)
                 {
                     res.matrix[i, j] = 0;
                     for (k = 0; k < 4; k++)
                         res.matrix[i, j] += a.matrix[i, k] * b.matrix[k, j];
                 }
-		}
-        private void Copy4x4 (Transform4x4 t, Transform4x4 res)
-        {
-	        int i,j;
-	        for (i = 0; i < 4; i++) for (j = 0; j < 4; j++) res.matrix[i,j] = t.matrix[i,j];
         }
-        public void TramsformTRRT (Point_3 p1, double[,] rotate1, double[,] rotate2, Point_3 p2, Transform4x4 res)
+        private void Copy4x4(Transform4x4 t, Transform4x4 res)
         {
-	        Transform4x4 tmp0 = new Transform4x4();
+            int i, j;
+            for (i = 0; i < 4; i++) for (j = 0; j < 4; j++) res.matrix[i, j] = t.matrix[i, j];
+        }
+        public void TramsformTRRT(Point_3 p1, double[,] rotate1, double[,] rotate2, Point_3 p2, Transform4x4 res)
+        {
+            Transform4x4 tmp0 = new Transform4x4();
             Transform4x4 tmp1 = new Transform4x4();
             Transform4x4 tmp2 = new Transform4x4();
             Transform4x4 tmp3 = new Transform4x4();
             Transform4x4 tmp4 = new Transform4x4();
 
-	        p1.x = -p1.x; p1.y = -p1.y; p1.z = -p1.z;
-            Translate4x4 (p1, tmp1);
-            Rotate4x4 (rotate1, tmp2);
-            Rotate4x4 (rotate2, tmp3);
-            Translate4x4 (p2, tmp4);
-            Multiply4x4 (tmp4, tmp3, tmp0); Copy4x4 (tmp0, tmp3);
-            Multiply4x4 (tmp3, tmp2, tmp0); Copy4x4 (tmp0, tmp2);
-            Multiply4x4 (tmp2, tmp1, tmp0); Copy4x4 (tmp0, res);
+            p1.x = -p1.x; p1.y = -p1.y; p1.z = -p1.z;
+            Translate4x4(p1, tmp1);
+            Rotate4x4(rotate1, tmp2);
+            Rotate4x4(rotate2, tmp3);
+            Translate4x4(p2, tmp4);
+            Multiply4x4(tmp4, tmp3, tmp0); Copy4x4(tmp0, tmp3);
+            Multiply4x4(tmp3, tmp2, tmp0); Copy4x4(tmp0, tmp2);
+            Multiply4x4(tmp2, tmp1, tmp0); Copy4x4(tmp0, res);
         }
         public void Transform(double[] x, Transform4x4 trn)
         {
-	        int i, j;
+            int i, j;
             double[] tmp = new double[3];
-	        tmp[0] = tmp[1] = tmp[2] = 0;
-	        for(i = 0; i < 3; i++) for(j = 0; j < 3; j++) tmp[i] += x[j] * trn.matrix[i, j];
-	        for(i = 0; i < 3; i++) x[i] = tmp[i] + trn.matrix[i, 3];
+            tmp[0] = tmp[1] = tmp[2] = 0;
+            for (i = 0; i < 3; i++) for (j = 0; j < 3; j++) tmp[i] += x[j] * trn.matrix[i, j];
+            for (i = 0; i < 3; i++) x[i] = tmp[i] + trn.matrix[i, 3];
         }
         public double[] TransformTo(double[] x, Transform4x4 trn)
         {
@@ -145,7 +145,7 @@
             Point_3[] pst = new Point_3[ps.Length];
             for (int i = 0; i < ps.Length; i++)
             {
-                if(ps[i] != null)
+                if (ps[i] != null)
                     pst[i] = TransformPTP(ps[i], trn);
             }
             return pst;
@@ -160,57 +160,57 @@
         }
         public void construct(Transform4x4 trn)
         {
-	        double[,] rotate = new double[3,3];
-            double[,] rotate_wobble = new double[3,3];
+            double[,] rotate = new double[3, 3];
+            double[,] rotate_wobble = new double[3, 3];
             double norm;
             Point cen_a = new Point();
             Point cen_b = new Point();
             Point_3 tna = new Point_3();
-	        cen_a.x = trn.translate_to[0];
-	        cen_a.y = trn.translate_to[1];
-	        cen_a.z = trn.translate_to[2];
-	        cen_b.x = trn.translate_from[0];
-	        cen_b.y = trn.translate_from[1];
-	        cen_b.z = trn.translate_from[2];
-        //	tna = p1a - p0a;
-	        tna.x = trn.rotate_to[0] - trn.translate_to[0];
-	        tna.y = trn.rotate_to[1] - trn.translate_to[1];
-	        tna.z = trn.rotate_to[2] - trn.translate_to[2];
-	        norm = ~tna;
-	        if(norm > FLT_EPSILON) tna = tna / ~tna;
-	        else { tna.x = 1; tna.y = 0; tna.z = 0;}
-	        RotateMatrix(trn.angles[0], trn.angles[1], trn.angles[2], rotate);
-	        WobbleMatrix(tna, (double)trn.angle, rotate_wobble);
-	        TramsformTRRT(cen_b, rotate, rotate_wobble, cen_a, trn);
+            cen_a.x = trn.translate_to[0];
+            cen_a.y = trn.translate_to[1];
+            cen_a.z = trn.translate_to[2];
+            cen_b.x = trn.translate_from[0];
+            cen_b.y = trn.translate_from[1];
+            cen_b.z = trn.translate_from[2];
+            //	tna = p1a - p0a;
+            tna.x = trn.rotate_to[0] - trn.translate_to[0];
+            tna.y = trn.rotate_to[1] - trn.translate_to[1];
+            tna.z = trn.rotate_to[2] - trn.translate_to[2];
+            norm = ~tna;
+            if (norm > FLT_EPSILON) tna = tna / ~tna;
+            else { tna.x = 1; tna.y = 0; tna.z = 0; }
+            RotateMatrix(trn.angles[0], trn.angles[1], trn.angles[2], rotate);
+            WobbleMatrix(tna, (double)trn.angle, rotate_wobble);
+            TramsformTRRT(cen_b, rotate, rotate_wobble, cen_a, trn);
         }
         public void RotateMatrix(double fi_x, double fi_y, double fi_z, double[,] rotate)
         {
-	        double s1,s2,s3,c1,c2,c3;
-	        s1=Math.Sin(fi_x); s2=Math.Sin(fi_y); s3=Math.Sin(fi_z);
-	        c1=Math.Cos(fi_x); c2=Math.Cos(fi_y); c3=Math.Cos(fi_z);
-        //	rotate[0][0] = c2*c3;
-        //	rotate[1][0] = s1*s2*c3-c1*s3;
-        //	rotate[2][0] = c1*s2*c3+s1*s3;
-        //	rotate[0][1] = c2*s3;
-        //	rotate[1][1] = s1*s2*s3+c1*c3;
-        //	rotate[2][1] = c1*s2*s3-s1*c3;
-        //	rotate[0][2] = -s2;
-        //	rotate[1][2] = s1*c2;
-        //	rotate[2][2] = c1*c2;
-	        rotate[0,0] =  (c2*c3);
-	        rotate[0,1] =  (s1*s2*c3 - c1*s3);
-	        rotate[0,2] =  (c1*s2*c3 + s1*s3);
-	        rotate[1,0] =  (c2*s3);
-	        rotate[1,1] =  (s1*s2*s3 + c1*c3);
-	        rotate[1,2] =  (c1*s2*s3 - s1*c3);
-	        rotate[2,0] =  (-s2);
-	        rotate[2,1] =  (s1*c2);
-	        rotate[2,2] =  (c1*c2);
+            double s1, s2, s3, c1, c2, c3;
+            s1 = Math.Sin(fi_x); s2 = Math.Sin(fi_y); s3 = Math.Sin(fi_z);
+            c1 = Math.Cos(fi_x); c2 = Math.Cos(fi_y); c3 = Math.Cos(fi_z);
+            //	rotate[0][0] = c2*c3;
+            //	rotate[1][0] = s1*s2*c3-c1*s3;
+            //	rotate[2][0] = c1*s2*c3+s1*s3;
+            //	rotate[0][1] = c2*s3;
+            //	rotate[1][1] = s1*s2*s3+c1*c3;
+            //	rotate[2][1] = c1*s2*s3-s1*c3;
+            //	rotate[0][2] = -s2;
+            //	rotate[1][2] = s1*c2;
+            //	rotate[2][2] = c1*c2;
+            rotate[0, 0] = (c2 * c3);
+            rotate[0, 1] = (s1 * s2 * c3 - c1 * s3);
+            rotate[0, 2] = (c1 * s2 * c3 + s1 * s3);
+            rotate[1, 0] = (c2 * s3);
+            rotate[1, 1] = (s1 * s2 * s3 + c1 * c3);
+            rotate[1, 2] = (c1 * s2 * s3 - s1 * c3);
+            rotate[2, 0] = (-s2);
+            rotate[2, 1] = (s1 * c2);
+            rotate[2, 2] = (c1 * c2);
         }
         public void EulerAnglers(out double fi_x, out double fi_y, out double fi_z, double[,] rotate)
         {
             double s1, s2, s3, c1, c2, c3;
-            s2 = - rotate[2, 0];
+            s2 = -rotate[2, 0];
             fi_y = Math.Asin(s2);
             c2 = Math.Cos(fi_y);
             s1 = rotate[2, 1] / c2;
@@ -223,36 +223,36 @@
         public double[,] GetRotate(Transform4x4 trn)
         {
             double[,] rotate = new double[3, 3];
-            for(int i = 0; i < 3; i++)
-                for(int j = 0; j < 3; j++)
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
                     rotate[i, j] = trn.matrix[i, j];
             return rotate;
         }
-        void TramsformTRRT (Point p1, double[,] rotate1, double[,] rotate2, Point p2, Transform4x4 res)
+        void TramsformTRRT(Point p1, double[,] rotate1, double[,] rotate2, Point p2, Transform4x4 res)
         {
-	        Transform4x4 tmp0 = new Transform4x4();
+            Transform4x4 tmp0 = new Transform4x4();
             Transform4x4 tmp1 = new Transform4x4();
             Transform4x4 tmp2 = new Transform4x4();
             Transform4x4 tmp3 = new Transform4x4();
             Transform4x4 tmp4 = new Transform4x4();
-	        p1.x = -p1.x; p1.y = -p1.y; p1.z = -p1.z;
-	        Translate4x4 (p1, tmp1);
-	        Rotate4x4 (rotate1, tmp2);
-	        Rotate4x4 (rotate2, tmp3);
-	        Translate4x4 (p2, tmp4);
-	        Multiply4x4 (tmp4, tmp3, tmp0); Copy4x4 (tmp0, tmp3);
-	        Multiply4x4 (tmp3, tmp2, tmp0); Copy4x4 (tmp0, tmp2);
-	        Multiply4x4 (tmp2, tmp1, tmp0); Copy4x4 (tmp0, res);
+            p1.x = -p1.x; p1.y = -p1.y; p1.z = -p1.z;
+            Translate4x4(p1, tmp1);
+            Rotate4x4(rotate1, tmp2);
+            Rotate4x4(rotate2, tmp3);
+            Translate4x4(p2, tmp4);
+            Multiply4x4(tmp4, tmp3, tmp0); Copy4x4(tmp0, tmp3);
+            Multiply4x4(tmp3, tmp2, tmp0); Copy4x4(tmp0, tmp2);
+            Multiply4x4(tmp2, tmp1, tmp0); Copy4x4(tmp0, res);
         }
-        void Translate4x4 (Point p, Transform4x4 res)
+        void Translate4x4(Point p, Transform4x4 res)
         {
-	        int i,j; 
-	        for (i = 0; i < 4; i++) for (j = 0; j < 3; j++)
-		        if(i == j) res.matrix[i,j] = 1; else res.matrix[i,j] = 0;
-	        res.matrix[0,3] = p.x;
-	        res.matrix[1,3] = p.y;
-	        res.matrix[2,3] = p.z;
-	        res.matrix[3,3] = 1;
+            int i, j;
+            for (i = 0; i < 4; i++) for (j = 0; j < 3; j++)
+                    if (i == j) res.matrix[i, j] = 1; else res.matrix[i, j] = 0;
+            res.matrix[0, 3] = p.x;
+            res.matrix[1, 3] = p.y;
+            res.matrix[2, 3] = p.z;
+            res.matrix[3, 3] = 1;
         }
         //void Multiply4x4 (Transform4x4 a, Transform4x4 b, Transform4x4 *res);
         //void Translate4x4 (Point_3 p, double *res[4][4]);

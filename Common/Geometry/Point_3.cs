@@ -3,26 +3,26 @@
     public class Point
     {
         public double x, y, z;
-	    public Point() {x=0; y=0; z=0;}
-	    //Point operator=(Point p) {x=p.x; y=p.y; z=p.z; return *this;}
+        public Point() { x = 0; y = 0; z = 0; }
+        //Point operator=(Point p) {x=p.x; y=p.y; z=p.z; return *this;}
     }
     public class Point_3
     {
         public double x, y, z;
         public Point_3() { x = 0; y = 0; z = 0; }
-        public Point_3(double dx, double dy, double dz) { x = dx; y = dy; z = dz;}
-        public Point_3(double[] v) { x = v[0]; y = v[1]; z = v[2];}
+        public Point_3(double dx, double dy, double dz) { x = dx; y = dy; z = dz; }
+        public Point_3(double[] v) { x = v[0]; y = v[1]; z = v[2]; }
         public Point_3(Point_3 p) { x = p.x; y = p.y; z = p.z; }
-        public static  double operator  ~(Point_3 p) { return Math.Sqrt(p.x * p.x + p.y * p.y + p.z * p.z);}
-        public static Point_3 operator  /(Point_3 p, double norm) {return new Point_3(p.x/norm, p.y/norm, p.z/norm);}
-        public static Point_3 operator  *(Point_3 p, double scale) { return new Point_3(p.x * scale, p.y * scale, p.z * scale); }
-        public static double operator   *(Point_3 p1, Point_3 p2) {return (p1.x*p2.x + p1.y*p2.y + p1.z*p2.z);}
-        public static Point_3 operator  ^(Point_3 p1, Point_3 p2) {return new Point_3(p1.y * p2.z - p1.z * p2.y, -p1.x * p2.z + p1.z * p2.x, p1.x * p2.y - p1.y * p2.x);}
-        public static Point_3 operator  +(Point_3 p1, Point_3 p2) { return new Point_3(p1.x + p2.x, p1.y + p2.y, p1.z + p2.z);}
-        public static Point_3 operator  -(Point_3 p1, Point_3 p2) { return new Point_3(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);}
-        public void CopyFrom(Point_3 p) { x= p.x; y = p.y; z = p.z; }
-        public void CopyTo(double[] v) {v[0] = x; v[1] = y; v[2] = z;}
-        public void CopyFrom(double[] v) {x = v[0]; y = v[1]; z = v[2];}
+        public static double operator ~(Point_3 p) { return Math.Sqrt(p.x * p.x + p.y * p.y + p.z * p.z); }
+        public static Point_3 operator /(Point_3 p, double norm) { return new Point_3(p.x / norm, p.y / norm, p.z / norm); }
+        public static Point_3 operator *(Point_3 p, double scale) { return new Point_3(p.x * scale, p.y * scale, p.z * scale); }
+        public static double operator *(Point_3 p1, Point_3 p2) { return (p1.x * p2.x + p1.y * p2.y + p1.z * p2.z); }
+        public static Point_3 operator ^(Point_3 p1, Point_3 p2) { return new Point_3(p1.y * p2.z - p1.z * p2.y, -p1.x * p2.z + p1.z * p2.x, p1.x * p2.y - p1.y * p2.x); }
+        public static Point_3 operator +(Point_3 p1, Point_3 p2) { return new Point_3(p1.x + p2.x, p1.y + p2.y, p1.z + p2.z); }
+        public static Point_3 operator -(Point_3 p1, Point_3 p2) { return new Point_3(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z); }
+        public void CopyFrom(Point_3 p) { x = p.x; y = p.y; z = p.z; }
+        public void CopyTo(double[] v) { v[0] = x; v[1] = y; v[2] = z; }
+        public void CopyFrom(double[] v) { x = v[0]; y = v[1]; z = v[2]; }
         public double Distance(Point_3 p) { Point_3 tmp = new Point_3(p.x - x, p.y - y, p.z - z); return ~tmp; }
     }
 }

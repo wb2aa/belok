@@ -1,6 +1,6 @@
 ﻿namespace Belok.Common.Geometry
 {
-    class Plane
+    internal class Plane
     {
         //n.x*x + n.y*y *n.z*z - D = 0; D >=0  canonical plane equation
         public Point_3 n; //normal
@@ -22,25 +22,27 @@
         public bool Set_Plane(Point_3 p1, Point_3 p2, Point_3 p3)
         {
             double POINTS_INLINE = 0.999;
-	        double norm; Point_3 dp1, dp2; double c;
-	        dp1 = p2 - p1; dp1 = dp1 / ~dp1;
-	        dp2 = p3 - p2; dp2 = dp2 / ~dp2;
-	        c = Math.Abs(dp1 * dp2);
-	        n.x = p1.y * (p2.z - p3.z) - p2.y * (p1.z - p3.z) + p3.y * (p1.z - p2.z);
-	        n.y = p1.z * (p2.x - p3.x) - p2.z * (p1.x - p3.x) + p3.z * (p1.x - p2.x);
-	        n.z = p1.x * (p2.y - p3.y) - p2.x * (p1.y - p3.y) + p3.x * (p1.y - p2.y);
-	        D =   p1.x * (p2.y*p3.z - p3.y*p2.z) - p2.x * (p1.y*p3.z - p3.y*p1.z) + p3.x * (p1.y*p2.z - p2.y*p1.z);
-	        //if(fabs(D) > DBL_EPSILON) {
-	        if(c < POINTS_INLINE) {
-		        norm = ~n; if(D < 0.0) norm = - norm;
-		        n = n / norm; D /= norm;
-		        return true;
-	        }
-	        else {
-		        n.x = 0; n.y = 0; n.z = 1.0;
-		        D = 0;
-		        return false;
-	        }
+            double norm; Point_3 dp1, dp2; double c;
+            dp1 = p2 - p1; dp1 = dp1 / ~dp1;
+            dp2 = p3 - p2; dp2 = dp2 / ~dp2;
+            c = Math.Abs(dp1 * dp2);
+            n.x = p1.y * (p2.z - p3.z) - p2.y * (p1.z - p3.z) + p3.y * (p1.z - p2.z);
+            n.y = p1.z * (p2.x - p3.x) - p2.z * (p1.x - p3.x) + p3.z * (p1.x - p2.x);
+            n.z = p1.x * (p2.y - p3.y) - p2.x * (p1.y - p3.y) + p3.x * (p1.y - p2.y);
+            D = p1.x * (p2.y * p3.z - p3.y * p2.z) - p2.x * (p1.y * p3.z - p3.y * p1.z) + p3.x * (p1.y * p2.z - p2.y * p1.z);
+            //if(fabs(D) > DBL_EPSILON) {
+            if (c < POINTS_INLINE)
+            {
+                norm = ~n; if (D < 0.0) norm = -norm;
+                n = n / norm; D /= norm;
+                return true;
+            }
+            else
+            {
+                n.x = 0; n.y = 0; n.z = 1.0;
+                D = 0;
+                return false;
+            }
         }
         public Point_3 Get_Normal(Point_3 p1, Point_3 p2, Point_3 p3)
         {
@@ -82,7 +84,7 @@
         public bool Set_Plane_normal_p(Point_3 p1, Point_3 p2, Point_3 p0)
         {
             bool res; Point_3 n_tmp;
-            Plane pln = new Plane(); 
+            Plane pln = new Plane();
             res = pln.Set_Plane(p1, p2, p0);
             if (res)
             {
@@ -108,7 +110,7 @@
         }
         public double dist(Point_3 p)
         {
-            return n*p - D;
+            return n * p - D;
         }
         //Point_3 Intersection(Point_3 x, Point_3 v);
     }
