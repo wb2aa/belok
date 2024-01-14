@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.IO;
 using System.IO.Compression;
 using Belok.Common.Geometry;
 
@@ -38,10 +40,16 @@ namespace Belok.Common.Visualization.BaseGraphics
         public virtual void open(string filename)
         {
         }
+        public virtual void closeScene()
+        {
+        }
         public virtual void close()
         {
         }
         public virtual void WriteHeader()
+        {
+        }
+        public virtual void WriteFooter()
         {
         }
         public virtual void DefaultViewpoint()
