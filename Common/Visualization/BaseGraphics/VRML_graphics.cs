@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.IO;
 using System.IO.Compression;
 using System.Text;
 using Belok.Common.Geometry;
