@@ -1,4 +1,6 @@
-﻿namespace Belok.Common.Geometry
+﻿using System;
+
+namespace Belok.Common.Geometry
 {
     public class Transform4x4
     {
