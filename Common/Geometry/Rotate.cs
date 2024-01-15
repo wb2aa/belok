@@ -24,7 +24,7 @@ namespace Belok.Common.Geometry
         //Transform4x4 operator = (Transform4x4 trn); //{angle = trn.angle; return *this;}
     };
 
-    internal class Rotate
+    public class Rotate
     {
         float FLT_EPSILON = 1.192092896e-07F;
         //void RotateMatrix(double fi_x, double fi_y, double fi_z, double rotate[3][3]);
